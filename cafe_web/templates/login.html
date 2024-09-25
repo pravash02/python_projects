@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="text-center">Login</h2>
+        <form method="POST" action="{{ url_for('login') }}" class="mt-4">
+            <div class="form-group">
+                <label for="mobile">Mobile Number</label>
+                <input type="text" class="form-control" id="mobile" name="mobile"
+                       placeholder="Enter your mobile number" required onkeypress="allowOnlyDigits(event)">
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Get OTP</button>
+        </form>
+    </div>
+    <script>
+        function allowOnlyDigits(event){
+            var key = event.keyCode || event.which;
+            var keyChar = String.fromCharCode(key);
+            if (!/^\d+$/.test(keyChar)){
+                event.preventDefault();
+            }
+        };
+    </script>
+</body>
+</html>

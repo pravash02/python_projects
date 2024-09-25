@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTP Validation</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+</head>
+<body>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class="container mt-3">
+          {% for message in messages %}
+            <div class="alert alert-success">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <div class="container mt-5">
+        <h2 class="text-center">Enter your name</h2>
+        <form id="otp-form" method="POST" action="{{ url_for('register_user') }}"  class="mt-4">
+            <div class="form-group" id="user_name_field">
+                <label for="user_name">Enter Your Name</label>
+                <input type="text" class="form-control" id="user_name" name="user_name" placeholder="Enter your name">
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block" id="user-btn">Submit</button>
+        </form>
+    </div>
+</body>
+</html>

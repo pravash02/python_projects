@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        .toggle-icon {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class="container mt-3">
+          {% for message in messages %}
+            <div class="alert alert-success">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <div class="container mt-5">
+        <h2 class="text-center">Menu</h2>
+
+        {% set categories = menu_items | groupby('category') %}
+
+        <div class="accordion" id="menuAccordion">
+            {% for category, items in categories %}
+                <div class="card">
+                    <div class="card-header" id="heading-{{ loop.index }}">
+                        <h5 class="mb-0">
+                            <button class="btn btn-light w-100 text-left d-flex justify-content-between align-items-center"
+                                    type="button" data-toggle="collapse" data-target="#collapse-{{ loop.index }}"
+                                    aria-expanded="true" aria-controls="collapse-{{ loop.index }}">
+                                <strong>{{ category }}</strong>
+                                <span class="toggle-icon">
+                                    <i class="fas fa-chevron-down"></i>
+                                </span>
+                            </button>
+                        </h5>
+                    </div>
+                    <div id="collapse-{{ loop.index }}" class="collapse show" aria-labelledby="heading-{{ loop.index }}"
+                         data-parent="#menuAccordion">
+                        <div class="card-body">
+                            <div class="row">
+                                {% for item in items %}
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card">
+                                            <div class="card-body text-center">
+                                                <h5 class="card-title">{{ item.name }}</h5>
+                                                <p class="card-text">${{ item.price }}</p>
+                                                <form method="POST" action="{{ url_for('menu') }}">
+                                                    <input type="hidden" name="item_id" value="{{ item.id }}">
+                                                    <button type="submit" class="btn btn-success">Add to Cart</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        {% if session.get('cart') %}
+        <div class="text-center mt-4">
+            <a href="{{ url_for('cart_view') }}" class="btn btn-primary">View Cart</a>
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        // Toggle icon rotation on collapse/expand
+        $('.accordion .btn-link').on('click', function() {
+            var icon = $(this).find('span.float-right');
+            icon.toggleClass('rotated');
+        });
+    </script>
+</body>
+</html>

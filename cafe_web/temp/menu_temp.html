@@ -1,0 +1,114 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script>
+        // Function to enable the button when an item is selected
+        function toggleButton(itemCheckbox, buttonId) {
+            let button = document.getElementById(buttonId);
+            button.disabled = !itemCheckbox.checked;
+        }
+
+        // Function to hide checkbox and label after button click
+        function hideCheckbox(itemId) {
+            let checkbox = document.getElementById('select_' + itemId);
+            let label = document.getElementById('label_' + itemId);
+            checkbox.style.display = 'none';
+            label.style.display = 'none';
+        }
+    </script>
+</head>
+<body>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class="container mt-3">
+          {% for message in messages %}
+            <div class="alert alert-success">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+    <div class="container mt-5">
+        <h2 class="text-center">Menu</h2>
+        <div class="row mt-4">
+            {% for item in menu_items %}
+                <div class="col-md-4 mb-3">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">{{ item.name }}</h5>
+                            <p class="card-text">${{ item.price }}</p>
+                            <form method="POST" action="{{ url_for('menu') }}" onsubmit="hideCheckbox({{ item.id }});">
+                                <!-- Checkbox for selecting the item -->
+                                <input type="checkbox" id="select_{{ item.id }}"
+                                       onclick="toggleButton(this, 'btn_{{ item.id }}')">
+                                <label for="select_{{ item.id }}" id="label_{{ item.id }}">Select</label>
+                                <input type="hidden" name="item_id" value="{{ item.id }}">
+                                <!-- Initially disabled Add to Cart button -->
+                                <button type="submit" id="btn_{{ item.id }}"
+                                        class="btn btn-success mt-2" disabled>Add to Cart</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Show 'View Cart' button only if there are items in the cart -->
+        {% if session.get('cart') %}
+        <div class="text-center mt-4">
+            <a href="{{ url_for('cart_view') }}" class="btn btn-primary">View Cart</a>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class="container mt-3">
+          {% for message in messages %}
+            <div class="alert alert-success">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+    <div class="container mt-5">
+        <h2 class="text-center">Menu</h2>
+        <div class="row mt-4">
+            {% for item in menu_items %}
+                <div class="col-md-4 mb-3">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">{{ item.name }}</h5>
+                            <p class="card-text">${{ item.price }}</p>
+                            <form method="POST" action="{{ url_for('menu') }}">
+                                <input type="hidden" name="item_id" value="{{ item.id }}">
+                                <button type="submit" class="btn btn-success">Add to Cart</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        {% if session.get('cart') %}
+        <div class="text-center mt-4">
+            <a href="{{ url_for('cart_view') }}" class="btn btn-primary">View Cart</a>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
