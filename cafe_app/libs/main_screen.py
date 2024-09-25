@@ -1,5 +1,4 @@
 from kivymd.app import MDApp
-from twilio.rest import Client
 import random
 from kivy.uix.screenmanager import Screen, SlideTransition
 
@@ -22,14 +21,6 @@ class HomeScreen(Screen):
         account_sid = ''
         auth_token = ''
         twilio_number = ''
-
-        # client = Client(account_sid, auth_token)
-        # message = client.messages.create(
-        #     body=f"Your otp code for Cafe Library - {otp}",
-        #     from_=twilio_number,
-        #     to=mobile_no
-        # )
-        # print(f"message sent with SID: {message.sid}")
 
     def logger(self):
         self.ids.welcome_label.text = f"Hey {self.ids.login.text}"
