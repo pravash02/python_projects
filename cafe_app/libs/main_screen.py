@@ -19,9 +19,9 @@ class HomeScreen(Screen):
         self.manager.current = 'OTPVerificationScreen'
 
     def send_sms(self, mobile_no, otp):
-        account_sid = 'AC67ec6cf70a44738a110a355db928dc88'
-        auth_token = 'b121e0dcf1e2e7a0dbeb72284633fd25'
-        twilio_number = 7875753393
+        account_sid = ''
+        auth_token = ''
+        twilio_number = ''
 
         # client = Client(account_sid, auth_token)
         # message = client.messages.create(
