@@ -1,0 +1,56 @@
+#:import utils kivy.utils
+
+
+<LoginScreen>:
+    name: "LoginScreen"
+    BoxLayout
+        id: login_layout
+        orientation: 'vertical'
+        height: root.height
+        width: root.width
+        padding: 50
+        spacing: 20
+
+        Label:
+            text: 'Welcome to Cafe Library'
+            font_size: 36
+            halign: 'center'
+
+        BoxLayout:
+            orientation: 'vertical'
+            Label:
+                text: 'Login'
+                font_size: 24
+                halign: 'left'
+                text_size: root.width-100, None
+
+            TextInput:
+                id: login
+                multiline:False
+                font_size: 20
+                size_hint: [1, .3]
+                background_color: utils.get_color_from_hex('#ffffff')
+
+        BoxLayout:
+            orientation: 'vertical'
+            Label:
+                text: 'Password'
+                font_size: 24
+                halign: 'left'
+                text_size: root.width-100, None
+
+            TextInput:
+                id: password
+                password:True
+                multiline:False
+                font_size: 20
+                size_hint: [1, .3]
+                background_color: utils.get_color_from_hex('#ffffff')
+
+        BoxLayout:
+            Button:
+                text: 'Connect'
+                pos_hint: {'center_x': 0.5}
+                font_size: 24
+                size_hint: [1, .4]
+                on_press: root.do_login(login.text)

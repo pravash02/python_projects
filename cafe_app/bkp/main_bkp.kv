@@ -1,0 +1,77 @@
+ScreenManager:
+    LoginScreen:
+    HomeScreen:
+    SeatBookingScreen:
+    BookListScreen:
+    TokenScreen:
+
+<LoginScreen>:
+    name: "login"
+    BoxLayout:
+        orientation: "vertical"
+        Label:
+            text: "Login to Cafe Library"
+            font_size: 30
+        TextInput:
+            id: email
+            hint_text: "Email"
+            multiline: False
+        TextInput:
+            id: password
+            hint_text: "Password"
+            password: True
+            multiline: False
+        Button:
+            text: "Login"
+            on_release: app.login_user(email.text, password.text)
+        Button:
+            text: "Sign Up"
+            on_release: app.root.current = "signup"
+
+<HomeScreen>:
+    name: "home"
+    BoxLayout:
+        orientation: "vertical"
+        Label:
+            text: "Welcome to Cafe Library!"
+            font_size: 30
+        Button:
+            text: "Book a Seat"
+            on_release: app.root.current = "seat_booking"
+        Button:
+            text: "Browse Books"
+            on_release: app.root.current = "book_list"
+        Button:
+            text: "View My Token"
+            on_release: app.root.current = "token"
+
+<SeatBookingScreen>:
+    name: "seat_booking"
+    BoxLayout:
+        orientation: "vertical"
+        Label:
+            text: "Available Seats: 10"
+        Button:
+            text: "Book a Seat"
+            on_release: app.book_seat()
+
+<BookListScreen>:
+    name: "book_list"
+    BoxLayout:
+        orientation: "vertical"
+        Label:
+            text: "Books List"
+        Button:
+            text: "Return to Home"
+            on_release: app.root.current = "home"
+
+<TokenScreen>:
+    name: "token"
+    BoxLayout:
+        orientation: "vertical"
+        Label:
+            id: token_label
+            text: "Your Token Details"
+        Button:
+            text: "Return to Home"
+            on_release: app.root.current = "home"

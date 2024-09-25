@@ -1,0 +1,24 @@
+<RegistrationCompleteScreen>:
+    name: "RegistrationCompleteScreen"
+    MDCard:
+        size_hint: None, None
+        size: 450, 600
+        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+        elevation: 10
+        padding: 25
+        spacing: 25
+        orientation: 'vertical'
+
+        MDLabel:
+            text: "Thank You for Registering!"
+            font_size: 24
+            halign: 'center'
+            size_hint_y: None
+            height: self.texture_size[1]
+            padding_y: 30
+
+        MDRoundFlatButton:
+            text: "Back to Home"
+            font_size: 12
+            pos_hint: {"center_x": 0.5}
+            on_press: root.go_back_home()

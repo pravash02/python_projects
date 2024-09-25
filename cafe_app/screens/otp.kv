@@ -1,0 +1,41 @@
+<OTPVerificationScreen>:
+    name: "OTPVerificationScreen"
+    MDCard:
+        size_hint: None, None
+        size: 450, 600
+        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+        elevation: 10
+        padding: 25
+        spacing: 25
+        orientation: 'vertical'
+
+        MDLabel:
+            text: "Enter OTP"
+            font_size: 24
+            halign: 'center'
+            size_hint_y: None
+            height: self.texture_size[1]
+            padding_y: 30
+
+        MDTextField:
+            id: otp_input
+            mode: 'round'
+            input_filter: 'int'
+            hint_text: "OTP"
+            icon_right: "key"
+            size_hint_x: None
+            width: 300
+            pos_hint: {"center_x": 0.5}
+
+        MDRoundFlatButton:
+            text: "VERIFY OTP"
+            font_size: 12
+            pos_hint: {"center_x": 0.5}
+            on_press: root.verify_otp(otp_input.text)
+
+        Label:
+            id: otp_status
+            text: ""
+            color: 1, 0, 0, 1  # Red text for error messages
+            font_size: 18
+            halign: 'center'

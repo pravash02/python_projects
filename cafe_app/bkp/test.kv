@@ -1,0 +1,128 @@
+ScreenManager:
+    HomeScreen:
+    OTPVerificationScreen:
+    RegistrationCompleteScreen:
+
+<HomeScreen>:
+    name: "HomeScreen"
+    MDCard:
+        size_hint: None, None
+        size: 450, 600
+        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+        elevation: 10
+        padding: 25
+        spacing: 25
+        orientation: 'vertical'
+
+        MDLabel:
+            id: welcome_label
+            text: "Welcome to Cafe Library!"
+            font_size: 38
+            halign: 'center'
+            size_hint_y: None
+            height: self.texture_size[1]
+            padding_y: 50
+
+        MDTextField:
+            id: user_name
+            mode: 'round'
+            hint_text: "USER NAME"
+            icon_right: "account"
+            size_hint_x: None
+            width: 300
+            font_size: 18
+            pos_hint: {"center_x": 0.5}
+
+        MDTextField:
+            id: mobile_no
+            mode: 'round'
+            input_filter: 'int'
+            hint_text: "MOBILE NO"
+            icon_right: "phone"
+            size_hint_x: None
+            width: 300
+            font_size: 18
+            pos_hint: {"center_x": 0.5}
+
+        MDRoundFlatButton:
+            text: "SEND OTP"
+            font_size: 12
+            pos_hint: {"center_x": 0.5}
+            on_press: root.send_otp(mobile_no.text)
+
+        MDRoundFlatButton:
+            text: "CLEAR"
+            font_size: 12
+            pos_hint: {"center_x": 0.5}
+            on_press: root.clear()
+
+        Widget:
+            size_hint_y: None
+            height: 10
+
+<OTPVerificationScreen>:
+    name: "OTPVerificationScreen"
+    MDCard:
+        size_hint: None, None
+        size: 450, 600
+        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+        elevation: 10
+        padding: 25
+        spacing: 25
+        orientation: 'vertical'
+
+        MDLabel:
+            text: "Enter OTP"
+            font_size: 24
+            halign: 'center'
+            size_hint_y: None
+            height: self.texture_size[1]
+            padding_y: 30
+
+        MDTextField:
+            id: otp_input
+            mode: 'round'
+            input_filter: 'int'
+            hint_text: "OTP"
+            icon_right: "key"
+            size_hint_x: None
+            width: 300
+            pos_hint: {"center_x": 0.5}
+
+        MDRoundFlatButton:
+            text: "VERIFY OTP"
+            font_size: 12
+            pos_hint: {"center_x": 0.5}
+            on_press: root.verify_otp(otp_input.text)
+
+        Label:
+            id: otp_status
+            text: ""
+            color: 1, 0, 0, 1  # Red text for error messages
+            font_size: 18
+            halign: 'center'
+
+<RegistrationCompleteScreen>:
+    name: "RegistrationCompleteScreen"
+    MDCard:
+        size_hint: None, None
+        size: 450, 600
+        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+        elevation: 10
+        padding: 25
+        spacing: 25
+        orientation: 'vertical'
+
+        MDLabel:
+            text: "Thank You for Registering!"
+            font_size: 24
+            halign: 'center'
+            size_hint_y: None
+            height: self.texture_size[1]
+            padding_y: 30
+
+        MDRoundFlatButton:
+            text: "Back to Home"
+            font_size: 12
+            pos_hint: {"center_x": 0.5}
+            on_press: root.go_back_home()
