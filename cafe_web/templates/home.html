@@ -5,10 +5,68 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome to Book Cafe</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f4f7f6; /* Light background to match greenkin style */
+            color: #2c3e50; /* Dark text color */
+        }
+
+        .container {
+            max-width: 700px;
+            margin-top: 100px;
+            text-align: center;
+            padding: 20px;
+            background-color: #ffffff; /* White background for the content area */
+            border-radius: 15px; /* Rounded corners */
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+        }
+
+        h1 {
+            font-size: 36px;
+            font-weight: bold;
+            color: #27ae60; /* Green text for the title */
+            margin-bottom: 40px;
+        }
+
+        .btn-primary {
+            background-color: #2ecc71; /* Green background for buttons */
+            border: none;
+            border-radius: 30px; /* Rounded button corners */
+            padding: 12px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #27ae60; /* Darker green on hover */
+        }
+
+        .mt-4 {
+            margin-top: 30px !important;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 576px) {
+            .container {
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+
+            .btn-primary {
+                font-size: 16px;
+                padding: 10px 20px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="container mt-5">
-        <h1 class="text-center">Welcome to Book Cafe</h1>
+    <div class="container">
+        <h1>Welcome to <b>Pints, Pages and Pour Overs</b></h1>
         <div class="text-center mt-4">
             <a href="{{ url_for('login') }}" class="btn btn-primary">Login to Order</a>
         </div>

@@ -8,9 +8,115 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
     <style>
-        .toggle-icon {
-            cursor: pointer;
+        body {
+            background-color: #f4f7f6; /* Light background */
         }
+
+        .container {
+            max-width: 800px;
+            margin-top: 60px;
+            background-color: #ffffff; /* White background for form */
+            padding: 30px;
+            border-radius: 10px; /* Rounded corners */
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+        }
+
+        h2 {
+            font-size: 32px;
+            font-weight: bold;
+            color: #2c3e50; /* Dark text color */
+            margin-bottom: 40px;
+        }
+
+        .accordion .card {
+            border-radius: 10px;
+            border: none;
+            margin-bottom: 15px;
+        }
+
+        .accordion .card-header {
+            background-color: #ffffff; /* White background for headers */
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+        }
+
+        .accordion .btn {
+            width: 100%;
+            text-align: left;
+            padding: 0;
+            font-size: 18px;
+            font-weight: bold;
+            color: #2ecc71; /* Green text for category */
+            background-color: transparent;
+            border: none;
+        }
+
+        .accordion .btn:hover {
+            color: #27ae60; /* Darker green on hover */
+        }
+
+        .toggle-icon i {
+            transition: transform 0.3s ease;
+        }
+
+        .toggle-icon i.rotated {
+            transform: rotate(180deg); /* Rotate the chevron icon */
+        }
+
+        .card-body {
+            padding: 15px;
+        }
+
+        .card .card {
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+        }
+
+        .card-body h5 {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50; /* Dark text color */
+        }
+
+        .card-body p {
+            font-size: 16px;
+            color: #7f8c8d; /* Soft text color for price */
+        }
+
+        .btn-success {
+            background-color: #2ecc71; /* Green button */
+            border: none;
+            border-radius: 30px;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-success:hover {
+            background-color: #27ae60; /* Darker green on hover */
+        }
+
+        .btn-primary {
+            background-color: #3498db; /* Light blue for 'View Cart' button */
+            border: none;
+            border-radius: 30px;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .btn-primary:hover {
+            background-color: #2980b9; /* Darker blue on hover */
+        }
+
+        .alert-success {
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
     </style>
 </head>
 <body>
@@ -24,7 +130,7 @@
       {% endif %}
     {% endwith %}
 
-    <div class="container mt-5">
+    <div class="container">
         <h2 class="text-center">Menu</h2>
 
         {% set categories = menu_items | groupby('category') %}
@@ -34,8 +140,7 @@
                 <div class="card">
                     <div class="card-header" id="heading-{{ loop.index }}">
                         <h5 class="mb-0">
-                            <button class="btn btn-light w-100 text-left d-flex justify-content-between align-items-center"
-                                    type="button" data-toggle="collapse" data-target="#collapse-{{ loop.index }}"
+                            <button class="btn" type="button" data-toggle="collapse" data-target="#collapse-{{ loop.index }}"
                                     aria-expanded="true" aria-controls="collapse-{{ loop.index }}">
                                 <strong>{{ category }}</strong>
                                 <span class="toggle-icon">
@@ -55,7 +160,7 @@
                                                 <h5 class="card-title">{{ item.name }}</h5>
                                                 <p class="card-text">${{ item.price }}</p>
                                                 <form method="POST" action="{{ url_for('menu') }}">
-                                                    <input type="hidden" name="item_id" value="{{ item.id }}">
+                                                    <input type="hidden" name="item_id" value="{{ item.menu_id }}">
                                                     <button type="submit" class="btn btn-success">Add to Cart</button>
                                                 </form>
                                             </div>
@@ -78,8 +183,8 @@
 
     <script>
         // Toggle icon rotation on collapse/expand
-        $('.accordion .btn-link').on('click', function() {
-            var icon = $(this).find('span.float-right');
+        $('.accordion .btn').on('click', function() {
+            var icon = $(this).find('.toggle-icon i');
             icon.toggleClass('rotated');
         });
     </script>
