@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         body {
-            background-color: #f4f7f6; /* Light background to match greenkin style */
+            background-color: #f4f7f6;
             color: #2c3e50; /* Dark text color */
         }
 
@@ -24,12 +24,12 @@
         h1 {
             font-size: 36px;
             font-weight: bold;
-            color: #27ae60; /* Green text for the title */
+            color: #6F4E37; /* coffee text for the title */
             margin-bottom: 40px;
         }
 
         .btn-primary {
-            background-color: #2ecc71; /* Green background for buttons */
+            background-color: #A47F66;
             border: none;
             border-radius: 30px; /* Rounded button corners */
             padding: 12px 30px;
@@ -40,7 +40,13 @@
         }
 
         .btn-primary:hover {
-            background-color: #27ae60; /* Darker green on hover */
+            background-color: #C0997F;
+        }
+
+        .btn-primary:focus, .btn-primary:active {
+            background-color: #A47F66 !important;;
+            outline: none;
+            box-shadow: none;
         }
 
         .mt-4 {
@@ -66,7 +72,10 @@
 </head>
 <body>
     <div class="container">
-        <h1>Welcome to <b>Pints, Pages and Pour Overs</b></h1>
+        <h1>
+            <span style="color: #C5B5A6">Welcome to</span>
+            <span style="color: #6F4E37;"><b>Pints, Pages and Pour Overs</b></span>
+        </h1>
         <div class="text-center mt-4">
             <a href="{{ url_for('login') }}" class="btn btn-primary">Login to Order</a>
         </div>

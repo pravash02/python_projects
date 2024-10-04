@@ -1,35 +1,39 @@
 import logging
 import os
+import random
 from datetime import timedelta
 
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
+from flask_session import Session
+from cafe_web.libs.connection import DBConnection
+from cafe_web.libs.models import db, User
 from flask_wtf.csrf import CSRFProtect
-from cafe_web.libs.db_connection import DBConnection
 
 os.urandom(24)
 
 app = Flask(__name__)
-# csrf = CSRFProtect(app)
 
 app.secret_key = os.environ.get('SECRET_KEY', 'fallback_secret_key')
 
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL') or 'postgresql://pravashpanigrahi:prav%400411@localhost/prav'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # app.config['SESSION_COOKIE_SECURE'] = True
 app.config['SESSION_COOKIE_HTTPONLY'] = True
 app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=30)
+app.config['SESSION_TYPE'] = 'sqlalchemy'
+app.config['SESSION_SQLALCHEMY'] = db
+app.config['SESSION_PERMANENT'] = False
+app.config['SESSION_USE_SIGNER'] = True
+
+db.init_app(app)
+app.config['SESSION_SQLALCHEMY'] = db
+
+# csrf = CSRFProtect(app)
+Session(app)
+
 
 logger = logging.getLogger(__name__)
-
-# TODO: Logic to store the cookie on the server side (redis, memcached, database backend)
-# from flask_session import Session
-#
-# app.config['SESSION_TYPE'] = 'redis'  # Store session data in Redis
-# app.config['SESSION_PERMANENT'] = False
-# app.config['SESSION_USE_SIGNER'] = True  # Sign the session data
-# app.config['SESSION_KEY_PREFIX'] = 'myapp_'  # Optional prefix for session keys
-#
-# Session(app)
-
 
 carts = {}
 
@@ -40,21 +44,21 @@ users = [
 ]
 # Mock Data for Food and Drinks
 menu_items = [
-    {'id': 1, 'name': 'Cappuccino', 'category': 'Coffee', 'price': 5, 'photo': ''},
-    {'id': 2, 'name': 'Latte', 'category': 'Coffee', 'price': 4, 'photo': ''},
-    {'id': 3, 'name': 'Mocha', 'category': 'Coffee', 'price': 6, 'photo': ''},
-    {'id': 4, 'name': 'Hazelnut', 'category': 'Flavoured Coffee', 'price': 4.5, 'photo': ''},
-    {'id': 5, 'name': 'Caramel', 'category': 'Flavoured Coffee', 'price': 4.5, 'photo': ''},
-    {'id': 6, 'name': 'Mocha', 'category': 'Flavoured Coffee', 'price': 3.5, 'photo': ''},
-    {'id': 7, 'name': 'Cinnamon', 'category': 'Flavoured Coffee', 'price': 4, 'photo': ''},
-    {'id': 8, 'name': 'Peppermint', 'category': 'Flavoured Coffee', 'price': 3.5, 'photo': ''},
-    {'id': 9, 'name': 'Chocolate Brownie', 'category': 'Pastry', 'price': 3, 'photo': ''},
-    {'id': 10, 'name': 'Caramel shortbread', 'category': 'Pastry', 'price': 5, 'photo': ''},
-    {'id': 11, 'name': 'Chocolate Truffle', 'category': 'Pastry', 'price': 2.8, 'photo': ''},
-    {'id': 12, 'name': 'Croissant', 'category': 'Pastry', 'price': 3.5, 'photo': ''},
-    {'id': 13, 'name': 'Chocolate Cookies', 'category': 'Pastry', 'price': 3.1, 'photo': ''},
-    {'id': 14, 'name': 'Honey & Raisin Cake', 'category': 'Pastry', 'price': 3, 'photo': ''},
-    {'id': 15, 'name': 'Muffins', 'category': 'Pastry', 'price': 2.4, 'photo': ''},
+    {'menu_id': 1, 'name': 'Cappuccino', 'category': 'Coffee', 'price': 5, 'photo': ''},
+    {'menu_id': 2, 'name': 'Latte', 'category': 'Coffee', 'price': 4, 'photo': ''},
+    {'menu_id': 3, 'name': 'Mocha', 'category': 'Coffee', 'price': 6, 'photo': ''},
+    {'menu_id': 4, 'name': 'Hazelnut', 'category': 'Flavoured Coffee', 'price': 4.5, 'photo': ''},
+    {'menu_id': 5, 'name': 'Caramel', 'category': 'Flavoured Coffee', 'price': 4.5, 'photo': ''},
+    {'menu_id': 6, 'name': 'Mocha', 'category': 'Flavoured Coffee', 'price': 3.5, 'photo': ''},
+    {'menu_id': 7, 'name': 'Cinnamon', 'category': 'Flavoured Coffee', 'price': 4, 'photo': ''},
+    {'menu_id': 8, 'name': 'Peppermint', 'category': 'Flavoured Coffee', 'price': 3.5, 'photo': ''},
+    {'menu_id': 9, 'name': 'Chocolate Brownie', 'category': 'Pastry', 'price': 3, 'photo': ''},
+    {'menu_id': 10, 'name': 'Caramel shortbread', 'category': 'Pastry', 'price': 5, 'photo': ''},
+    {'menu_id': 11, 'name': 'Chocolate Truffle', 'category': 'Pastry', 'price': 2.8, 'photo': ''},
+    {'menu_id': 12, 'name': 'Croissant', 'category': 'Pastry', 'price': 3.5, 'photo': ''},
+    {'menu_id': 13, 'name': 'Chocolate Cookies', 'category': 'Pastry', 'price': 3.1, 'photo': ''},
+    {'menu_id': 14, 'name': 'Honey & Raisin Cake', 'category': 'Pastry', 'price': 3, 'photo': ''},
+    {'menu_id': 15, 'name': 'Muffins', 'category': 'Pastry', 'price': 2.4, 'photo': ''},
 ]
 
 
@@ -67,16 +71,23 @@ def home():
 def login():
     if request.method == 'POST':
         mobile = request.form['mobile']
-        # TODO: Logic for OTP generation and sending to user's mobile no
-        otp = '1234'
 
-        conn = DBConnection("")
+        # otp = str(random.randint(1000, 9999))
+        otp = '1234'  # TODO: for testing
+
+        # TODO: Logic for sending otp to user's mobile no
+
+        # TODO: Logic for sending otp to user's email id
+
         # TODO: Logic to query the Database with the mobile no
-        # user = conn.execute("")
-        # conn.close()
+        # user = User.query.filter_by(mobile=mobile).first()
+        # if user:
+        #     session['user_id'] = user.id
+        #     session['user_name'] = user.username
+        #     session['user_mobile'] = user.mobile
 
-        user = users[0]     # TODO: To be removed
-
+        # TODO: for testing
+        user = users[0]
         if str(user['mobile']) == mobile:
             session['user_id'] = user['id']
             session['user_name'] = user['name']
@@ -84,9 +95,12 @@ def login():
 
             flash(f"Hi {user['name']}, Welcome back. Please select menu to order")
             return redirect(url_for('menu'))
+
         else:
-            session['user_mobile'] = user['mobile']
+            session['user_mobile'] = mobile
             session['otp'] = otp
+
+            flash(f"OTP has been sent to {mobile}. Please enter the OTP to proceed.")
             return redirect(url_for('otp_validation'))
 
     return render_template('login.html')
@@ -99,7 +113,14 @@ def otp_validation():
         return redirect(url_for('login'))
 
     if request.method == 'POST':
-        if request.form.get('otp') == session.get('otp'):
+        entered_otp = (
+                request.form.get('otp-1', '') +
+                request.form.get('otp-2', '') +
+                request.form.get('otp-3', '') +
+                request.form.get('otp-4', '')
+        )
+
+        if entered_otp == session['otp']:
             flash("OTP validated successfully!")
             return render_template('register_user.html')
 
@@ -124,13 +145,16 @@ def register_user():
         # conn.execute('INSERT INTO users (user_name, mobile_no) VALUES (?, ?)',
         #              (user_name, session['mobile']))
         # conn.commit()
+
         # TODO: Logic to retrieve user's info
         # user = conn.execute("")
+        # if user:
+        #     session['user_name'] = user_name
+        #     session['user_id'] = user.id
         # conn.close()
 
-        user = users[0]     # TODO: To be removed
-
-        # Store user details in session
+        # TODO: To be removed
+        user = users[0]
         session['user_name'] = user_name
         session['user_id'] = user['id']
 
@@ -153,7 +177,7 @@ def menu():
             carts[session['user_mobile']] = []
 
         item_id = int(request.form['item_id'])
-        item = next((item for item in menu_items if item['id'] == item_id), None)
+        item = next((item for item in menu_items if item['menu_id'] == item_id), None)
         if item:
             carts[session['user_mobile']].append(item)
             session['cart'] = carts[session['user_mobile']]

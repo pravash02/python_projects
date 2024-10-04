@@ -47,13 +47,13 @@
             padding: 0;
             font-size: 18px;
             font-weight: bold;
-            color: #2ecc71; /* Green text for category */
+            color: #492310;
             background-color: transparent;
             border: none;
         }
 
         .accordion .btn:hover {
-            color: #27ae60; /* Darker green on hover */
+            color: #C5AC94;
         }
 
         .toggle-icon i {
@@ -84,8 +84,16 @@
             color: #7f8c8d; /* Soft text color for price */
         }
 
+        .item-img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
         .btn-success {
-            background-color: #2ecc71; /* Green button */
+            background-color: #FFECD0;
             border: none;
             border-radius: 30px;
             padding: 10px 20px;
@@ -95,11 +103,18 @@
         }
 
         .btn-success:hover {
-            background-color: #27ae60; /* Darker green on hover */
+            background-color: #260D00;
+            color: #ffffff !important;
+        }
+
+        .btn-success:focus, .btn-success:active {
+            background-color: #C5AC94 !important;
+            outline: none;
+            box-shadow: none;
         }
 
         .btn-primary {
-            background-color: #3498db; /* Light blue for 'View Cart' button */
+            background-color: #A47F66;
             border: none;
             border-radius: 30px;
             padding: 10px 20px;
@@ -108,7 +123,13 @@
         }
 
         .btn-primary:hover {
-            background-color: #2980b9; /* Darker blue on hover */
+            background-color: #C0997F;
+        }
+
+        .btn-primary:focus, .btn-primary:active {
+            background-color: #A47F66 !important;
+            outline: none;
+            box-shadow: none;
         }
 
         .alert-success {
@@ -157,6 +178,7 @@
                                     <div class="col-md-4 mb-3">
                                         <div class="card">
                                             <div class="card-body text-center">
+                                                <img src="{{ item.photo or url_for('static', filename='default_placeholder.png') }}" alt="{{ item.name }}" class="item-img">
                                                 <h5 class="card-title">{{ item.name }}</h5>
                                                 <p class="card-text">${{ item.price }}</p>
                                                 <form method="POST" action="{{ url_for('menu') }}">

@@ -8,43 +8,41 @@
 
     <style>
         body {
-            background-color: #f4f7f6; /* Light background */
+            background-color: #f4f7f6;
         }
 
         .container {
             max-width: 400px;
             margin-top: 100px;
-            background-color: #ffffff; /* White background for form */
+            background-color: #ffffff;
             padding: 30px;
-            border-radius: 10px; /* Rounded corners */
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
         }
 
         h2 {
             font-size: 28px;
             font-weight: bold;
-            color: #2c3e50; /* Dark text color */
+            color: #2c3e50;
         }
 
-        .form-group label {
-            font-weight: 600;
-            color: #34495e; /* Slightly darker label color */
+        .otp-input {
+            width: 60px;
+            height: 60px;
+            font-size: 24px;
+            text-align: center;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            margin: 0 10px;
         }
 
-        .form-control {
-            border-radius: 30px; /* Rounded input fields */
-            padding: 10px 15px;
-            font-size: 16px;
-            border: 1px solid #ddd; /* Soft border */
-        }
-
-        .form-control:focus {
-            border-color: #2ecc71; /* Green border on focus */
-            box-shadow: none; /* Remove box shadow on focus */
+        .otp-input:focus {
+            border-color: #2ecc71;
+            outline: none;
         }
 
         .btn-primary {
-            background-color: #2ecc71; /* Green button */
+            background-color: #A47F66;
             border: none;
             border-radius: 30px;
             padding: 10px 20px;
@@ -53,17 +51,25 @@
         }
 
         .btn-primary:hover {
-            background-color: #27ae60; /* Darker green on hover */
+            background-color: #C0997F;
         }
 
-        .btn-block {
-            width: 100%;
+        .btn-primary:focus, .btn-primary:active {
+            background-color: #A47F66 !important;;
+            outline: none;
+            box-shadow: none;
         }
 
         .alert-success {
             border-radius: 10px;
             font-size: 14px;
             font-weight: bold;
+        }
+
+        .otp-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
         }
     </style>
 </head>
@@ -80,24 +86,33 @@
     {% endwith %}
 
     <div class="container">
-        <h2 class="text-center">OTP Validation</h2>
+        <h2 class="text-center">Enter OTP received</h2>
         <form id="otp-form" method="POST" action="{{ url_for('otp_validation') }}" class="mt-4">
-            <div class="form-group" id="otp_field">
-                <label for="otp">Enter OTP</label>
-                <input type="text" class="form-control" id="otp" name="otp" placeholder="Enter the OTP"
-                       required onkeypress="allowOnlyDigits(event)">
+            <div class="otp-container">
+                <input type="text" class="form-control otp-input" id="otp-1" name="otp-1" maxlength="1" required oninput="moveToNext(this, 'otp-2')" onkeypress="allowOnlyDigits(event)">
+                <input type="text" class="form-control otp-input" id="otp-2" name="otp-2" maxlength="1" required oninput="moveToNext(this, 'otp-3')" onkeypress="allowOnlyDigits(event)">
+                <input type="text" class="form-control otp-input" id="otp-3" name="otp-3" maxlength="1" required oninput="moveToNext(this, 'otp-4')" onkeypress="allowOnlyDigits(event)">
+                <input type="text" class="form-control otp-input" id="otp-4" name="otp-4" maxlength="1" required oninput="moveToNext(this, null)" onkeypress="allowOnlyDigits(event)">
             </div>
 
-            <button type="submit" class="btn btn-primary btn-block" id="validate-btn">Validate OTP</button>
+            <button type="submit" class="btn btn-primary btn-block" id="validate-btn">Verify</button>
         </form>
     </div>
 
     <script>
+        // Allow only digits in OTP fields
         function allowOnlyDigits(event) {
             var key = event.keyCode || event.which;
             var keyChar = String.fromCharCode(key);
             if (!/^\d+$/.test(keyChar)){
                 event.preventDefault();
+            }
+        }
+
+        // Move to next input box automatically
+        function moveToNext(current, nextFieldId) {
+            if (current.value.length === 1 && nextFieldId) {
+                document.getElementById(nextFieldId).focus();
             }
         }
     </script>
