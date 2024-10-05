@@ -6,6 +6,7 @@ from datetime import timedelta
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 from flask_session import Session
 from cafe_web.libs.connection import DBConnection
+from cafe_web.libs.send_otp import OTPClass
 from cafe_web.libs.models import db, User
 from flask_wtf.csrf import CSRFProtect
 
@@ -39,8 +40,8 @@ carts = {}
 
 # Mock Data for Users
 users = [
-    {'id': 1, 'name': 'pravash', 'mobile': 7875753393},
-    {'id': 2, 'name': 'shelley', 'mobile': 8637292526},
+    {'id': 1, 'name': 'pravash', 'mobile': 7875753393, 'email_id': "pravash.cse@gmail.com"},
+    {'id': 2, 'name': 'shelley', 'mobile': 8637292526, 'email_id': "shelley.tripathy@gmail.com"},
 ]
 # Mock Data for Food and Drinks
 menu_items = [
@@ -72,19 +73,13 @@ def login():
     if request.method == 'POST':
         mobile = request.form['mobile']
 
-        # otp = str(random.randint(1000, 9999))
-        otp = '1234'  # TODO: for testing
-
-        # TODO: Logic for sending otp to user's mobile no
-
-        # TODO: Logic for sending otp to user's email id
-
         # TODO: Logic to query the Database with the mobile no
         # user = User.query.filter_by(mobile=mobile).first()
         # if user:
         #     session['user_id'] = user.id
         #     session['user_name'] = user.username
         #     session['user_mobile'] = user.mobile
+        #     session['user_mobile'] = user.email_id
 
         # TODO: for testing
         user = users[0]
@@ -92,18 +87,61 @@ def login():
             session['user_id'] = user['id']
             session['user_name'] = user['name']
             session['user_mobile'] = user['mobile']
+            session['user_email'] = user['email_id']
 
             flash(f"Hi {user['name']}, Welcome back. Please select menu to order")
             return redirect(url_for('menu'))
 
         else:
             session['user_mobile'] = mobile
-            session['otp'] = otp
 
-            flash(f"OTP has been sent to {mobile}. Please enter the OTP to proceed.")
-            return redirect(url_for('otp_validation'))
+            flash(f"Please enter below details")
+            return render_template('register_user.html')
 
     return render_template('login.html')
+
+
+@app.route('/register-user', methods=['GET', 'POST'])
+def register_user():
+    if 'user_mobile' not in session:
+        flash("Please enter your mobile no first")
+        return redirect(url_for('login'))
+
+    if request.method == 'POST':
+        user_name = request.form.get('user_name')
+        email_id = request.form.get('email_id')
+
+        # TODO: Logic to insert user's info to Users table
+        # conn = get_db_connection()
+        # conn.execute('INSERT INTO users (user_name, mobile_no, email_id) VALUES (?, ?)',
+        #              (user_name, session['mobile'], email_id))
+        # conn.commit()
+
+        # TODO: Logic to retrieve user's info
+        # user = conn.execute("")
+        # if user:
+        #     session['user_name'] = user_name
+        #     session['user_id'] = user.id
+        #     session['email_id'] = user.email_id
+        # conn.close()
+
+        # TODO: To be removed
+        user = users[0]
+        session['user_name'] = user_name
+        session['user_id'] = user['id']
+        session['user_email_id'] = email_id
+
+        # TODO: Logic for sending otp to user's mobile no
+
+        # sending otp to user's email id
+        otp_obj = OTPClass(email_id, user_name)
+        otp = otp_obj()
+        session['otp'] = otp
+
+        flash(f"OTP has been sent to {session['user_mobile']} / {email_id}. Please enter the OTP to proceed.")
+        return redirect(url_for('otp_validation'))
+
+    return render_template('register_user.html')
 
 
 @app.route('/otp-validation', methods=['GET', 'POST'])
@@ -122,46 +160,14 @@ def otp_validation():
 
         if entered_otp == session['otp']:
             flash("OTP validated successfully!")
-            return render_template('register_user.html')
+            flash(f"Hi {session['user_name']}, Welcome!, You have been registered successfully.")
+            return redirect(url_for('menu'))
 
         else:
             flash("Invalid OTP. Please try again")
             return render_template('otp_validation.html')
 
     return render_template('otp_validation.html')
-
-
-@app.route('/register-user', methods=['GET', 'POST'])
-def register_user():
-    if 'user_mobile' not in session:
-        flash("Please enter your mobile no first")
-        return redirect(url_for('login'))
-
-    if request.method == 'POST':
-        user_name = request.form.get('user_name')
-
-        # TODO: Logic to insert user's info to Users table
-        # conn = get_db_connection()
-        # conn.execute('INSERT INTO users (user_name, mobile_no) VALUES (?, ?)',
-        #              (user_name, session['mobile']))
-        # conn.commit()
-
-        # TODO: Logic to retrieve user's info
-        # user = conn.execute("")
-        # if user:
-        #     session['user_name'] = user_name
-        #     session['user_id'] = user.id
-        # conn.close()
-
-        # TODO: To be removed
-        user = users[0]
-        session['user_name'] = user_name
-        session['user_id'] = user['id']
-
-        flash(f"Hi {user_name}, Welcome!, You have been registered successfully.")
-        return redirect(url_for('menu'))
-
-    return render_template('register_user.html')
 
 
 @app.route('/menu', methods=['GET', 'POST'])
