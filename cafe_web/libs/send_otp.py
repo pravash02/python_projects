@@ -42,5 +42,5 @@ class OTPClass:
 
 
 if __name__ == "__main__":
-    obj = OTPClass("test@gmail.com")
+    obj = OTPClass("test@gmail.com", "Test")
     obj()

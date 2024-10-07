@@ -183,6 +183,10 @@
                                                 <p class="card-text">${{ item.price }}</p>
                                                 <form method="POST" action="{{ url_for('menu') }}">
                                                     <input type="hidden" name="item_id" value="{{ item.menu_id }}">
+                                                    <div class="form-group">
+                                                        <label for="quantity-{{ item.menu_id }}">Quantity:</label>
+                                                        <input type="number" class="form-control" id="quantity-{{ item.menu_id }}" name="quantity" min="1" value="1" required>
+                                                    </div>
                                                     <button type="submit" class="btn btn-success">Add to Cart</button>
                                                 </form>
                                             </div>

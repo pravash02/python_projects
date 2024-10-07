@@ -109,17 +109,20 @@
                 <tr>
                     <th>Item</th>
                     <th>Price</th>
+                    <th>Quantity</th>
                 </tr>
             </thead>
             <tbody>
                 {% for item in cart %}
                     <tr>
                         <td>{{ item.name }}</td>
+                        <td>{{ item.quantity }}</td>
                         <td>${{ item.price }}</td>
                     </tr>
                 {% endfor %}
                 <tr>
                     <th>Total</th>
+                    <th>{{ total_quantity }}</th>
                     <th>${{ total_price }}</th>
                 </tr>
             </tbody>
