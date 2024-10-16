@@ -57,3 +57,20 @@ class OrderItem(db.Model):
     def __init__(self, order_id, description):
         self.order_id = order_id
         self.description = description
+
+
+class CartItem(db.Model):
+    __tablename__ = 'cart_items'
+
+    id = db.Column(db.Integer, db.Identity(start=1, increment=1), primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)  # Corrected to 'users'
+    menu_item_id = db.Column(db.Integer, db.ForeignKey('menu_items.menu_id'), nullable=False)  # Corrected to 'menu_items'
+    quantity = db.Column(db.Integer, nullable=False)
+
+    user = db.relationship('User', backref=db.backref('cart_items', lazy=True))
+    menu_item = db.relationship('MenuItem', backref=db.backref('cart_items', lazy=True))
+
+    def __init__(self, user_id, menu_item_id, quantity):
+        self.user_id = user_id
+        self.menu_item_id = menu_item_id
+        self.quantity = quantity

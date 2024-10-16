@@ -108,20 +108,22 @@
             <thead>
                 <tr>
                     <th>Item</th>
-                    <th>Price</th>
                     <th>Quantity</th>
+                    <th>Price (per item)</th>
+                    <th>Total Price</th>
                 </tr>
             </thead>
             <tbody>
                 {% for item in cart %}
                     <tr>
-                        <td>{{ item.name }}</td>
+                        <td>{{ item.menu_item.name  }}</td>
                         <td>{{ item.quantity }}</td>
-                        <td>${{ item.price }}</td>
+                        <td>${{ item.menu_item.price }}</td>
+                        <td>${{ item.menu_item.price * item.quantity }}</td>
                     </tr>
                 {% endfor %}
                 <tr>
-                    <th>Total</th>
+                    <th colspan="2">Total</th>
                     <th>{{ total_quantity }}</th>
                     <th>${{ total_price }}</th>
                 </tr>

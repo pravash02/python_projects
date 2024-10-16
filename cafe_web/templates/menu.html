@@ -156,51 +156,53 @@
 
         {% set categories = menu_items | groupby('category') %}
 
-        <div class="accordion" id="menuAccordion">
-            {% for category, items in categories %}
-                <div class="card">
-                    <div class="card-header" id="heading-{{ loop.index }}">
-                        <h5 class="mb-0">
-                            <button class="btn" type="button" data-toggle="collapse" data-target="#collapse-{{ loop.index }}"
-                                    aria-expanded="true" aria-controls="collapse-{{ loop.index }}">
-                                <strong>{{ category }}</strong>
-                                <span class="toggle-icon">
-                                    <i class="fas fa-chevron-down"></i>
-                                </span>
-                            </button>
-                        </h5>
-                    </div>
-                    <div id="collapse-{{ loop.index }}" class="collapse show" aria-labelledby="heading-{{ loop.index }}"
-                         data-parent="#menuAccordion">
-                        <div class="card-body">
-                            <div class="row">
-                                {% for item in items %}
-                                    <div class="col-md-4 mb-3">
-                                        <div class="card">
-                                            <div class="card-body text-center">
-                                                <img src="{{ item.photo or url_for('static', filename='default_placeholder.png') }}" alt="{{ item.name }}" class="item-img">
-                                                <h5 class="card-title">{{ item.name }}</h5>
-                                                <p class="card-text">${{ item.price }}</p>
-                                                <form method="POST" action="{{ url_for('menu') }}">
-                                                    <input type="hidden" name="item_id" value="{{ item.menu_id }}">
+        <form method="POST" action="{{ url_for('menu') }}">
+            <div class="accordion" id="menuAccordion">
+                {% for category, items in categories %}
+                    <div class="card">
+                        <div class="card-header" id="heading-{{ loop.index }}">
+                            <h5 class="mb-0">
+                                <button class="btn" type="button" data-toggle="collapse" data-target="#collapse-{{ loop.index }}"
+                                        aria-expanded="true" aria-controls="collapse-{{ loop.index }}">
+                                    <strong>{{ category }}</strong>
+                                    <span class="toggle-icon">
+                                        <i class="fas fa-chevron-down"></i>
+                                    </span>
+                                </button>
+                            </h5>
+                        </div>
+                        <div id="collapse-{{ loop.index }}" class="collapse show" aria-labelledby="heading-{{ loop.index }}"
+                             data-parent="#menuAccordion">
+                            <div class="card-body">
+                                <div class="row">
+                                    {% for item in items %}
+                                        <div class="col-md-4 mb-3">
+                                            <div class="card">
+                                                <div class="card-body text-center">
+                                                    <img src="{{ item.photo or url_for('static', filename='default_placeholder.png') }}" alt="{{ item.name }}" class="item-img">
+                                                    <h5 class="card-title">{{ item.name }}</h5>
+                                                    <p class="card-text">${{ item.price }}</p>
                                                     <div class="form-group">
                                                         <label for="quantity-{{ item.menu_id }}">Quantity:</label>
-                                                        <input type="number" class="form-control" id="quantity-{{ item.menu_id }}" name="quantity" min="1" value="1" required>
+                                                        <input type="number" class="form-control" id="quantity-{{ item.menu_id }}" name="quantity_{{ item.menu_id }}" min="0" value="0">
                                                     </div>
-                                                    <button type="submit" class="btn btn-success">Add to Cart</button>
-                                                </form>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                {% endfor %}
+                                    {% endfor %}
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            {% endfor %}
-        </div>
+                {% endfor %}
+            </div>
 
-        {% if session.get('cart') %}
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-primary">Add Selected Items to Cart</button>
+            </div>
+        </form>
+
+        {% if has_cart_items %}
         <div class="text-center mt-4">
             <a href="{{ url_for('cart_view') }}" class="btn btn-primary">View Cart</a>
         </div>
@@ -214,5 +216,6 @@
             icon.toggleClass('rotated');
         });
     </script>
+
 </body>
 </html>
